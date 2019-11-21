@@ -2,6 +2,10 @@ import argparse
 import sys
 import time
 import os
+from tqdm import tqdm,trange
+import concurrent.futures
+from concurrent.futures import ThreadPoolExecutor
+import random
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Arguments Test")
@@ -16,18 +20,25 @@ if __name__ == "__main__":
 
     Logger_Default_File_Path = "logs/log"
 
-    #addded a thing
-    
-    print(args)
-    #made a change
+    # if  args.o != False:
+    #     if args.o != None:
+    #         os.makedirs(os.path.dirname(f'{args.o}.log'), exist_ok=True)
+    #         with open(f'{args.o}.log','a+') as f:
+    #             f.write(f'{time.ctime()}\n')
+    #     else:
+    #         os.makedirs(os.path.dirname(f'{Logger_Default_File_Path}.log'), exist_ok=True)
+    #         with open(f'{Logger_Default_File_Path}.log','a+') as f:
+    #             f.write(f'{time.ctime()}\n')
 
-    if  args.o != False:
-        if args.o != None:
-            os.makedirs(os.path.dirname(f'{args.o}.log'), exist_ok=True)
-            with open(f'{args.o}.log','a+') as f:
-                f.write(f'{time.ctime()}\n')
-        else:
-            os.makedirs(os.path.dirname(f'{Logger_Default_File_Path}.log'), exist_ok=True)
-            with open(f'{Logger_Default_File_Path}.log','a+') as f:
-                f.write(f'{time.ctime()}\n')
- 
+
+def do(num:int) -> int:
+    time.sleep(random.randint(1,5))
+
+    return num
+
+tqdm.write("start!")
+with tqdm(total=10) as pbar:
+    with ThreadPoolExecutor() as executor:
+        threads = [executor.submit(do,i) for i in range(10)]
+        for thread in concurrent.futures.as_completed(threads):
+            pbar.update(1)
