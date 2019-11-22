@@ -36,9 +36,15 @@ def do(num:int) -> int:
 
     return num
 
-tqdm.write("start!")
+
+bar = tqdm(total=2)
+bar.update(1)
+
+tqdm.write("\n")
 with tqdm(total=10) as pbar:
     with ThreadPoolExecutor() as executor:
         threads = [executor.submit(do,i) for i in range(10)]
         for thread in concurrent.futures.as_completed(threads):
             pbar.update(1)
+
+bar.update(1)
